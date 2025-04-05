@@ -1,17 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Manager Compatibility Quiz</title>
   <style>
     body {
-      font-family: 'Comic Sans MS', sans-serif;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
       background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
       margin: 0;
       padding: 0;
       text-align: center;
       color: #333;
+      overflow-x: hidden;
     }
     #cover-page {
       padding: 50px;
@@ -47,6 +47,7 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      position: relative;
     }
     #chat-header {
       background: #ff9800;
@@ -93,6 +94,35 @@
       cursor: pointer;
       font-size: 18px;
     }
+    #chibi {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      width: 80px;
+      cursor: pointer;
+      animation: float 3s ease-in-out infinite;
+      transition: transform 0.3s;
+    }
+    #chibi-speech {
+      position: absolute;
+      bottom: 100px;
+      left: 100px;
+      background: #fff;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 14px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -100,9 +130,7 @@
     <h1>Welcome to the Office Section A ke Homies</h1>
     <p>☕ Is your coffee ready? If yes, sip and start! 🚀</p>
     <button id="start-btn">Start</button>
-  </div>
-
-  <div id="chat-container" class="hidden">
+  </div>  <div id="chat-container" class="hidden">
     <div id="chat-header">
       <h2 id="chat-title">Your Trusted Coworker 🤖</h2>
     </div>
@@ -111,9 +139,9 @@
       <input type="text" id="user-input" placeholder="Type your name..." />
       <button id="submit-name">➡️</button>
     </div>
-  </div>
-
-  <script>
+    <img id="chibi" src="https://i.ibb.co/mT71dzL/chibi-character.png" alt="Chibi Character" />
+    <div id="chibi-speech"></div>
+  </div>  <script>
     const startBtn = document.getElementById('start-btn');
     const coverPage = document.getElementById('cover-page');
     const chatContainer = document.getElementById('chat-container');
@@ -121,40 +149,61 @@
     const chatTitle = document.getElementById('chat-title');
     const userInput = document.getElementById('user-input');
     const submitName = document.getElementById('submit-name');
+    const chibi = document.getElementById('chibi');
+    const chibiSpeech = document.getElementById('chibi-speech');
 
     let index = 0;
     let scores = { resonant: 0, dissonant: 0 };
     let userName = '';
 
+    const motivationalQuotes = [
+      "You got this, coworker!",
+      "Sip your coffee and slay the day!",
+      "Teamwork makes the dream work!",
+      "Deadlines fear you.",
+      "Let’s make magic happen today!"
+    ];
+
+    chibi.addEventListener('click', () => {
+      const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
+      chibi.style.transform = 'translateX(30px) scale(1.1)';
+      chibiSpeech.innerText = motivationalQuotes[randomIndex];
+      chibiSpeech.style.display = 'block';
+      setTimeout(() => {
+        chibi.style.transform = 'translateX(0) scale(1)';
+        chibiSpeech.style.display = 'none';
+      }, 2500);
+    });
+
     const questions = [
       {
-        q: "You prefer managers who listen first, then decide.",
-        options: ["✅ Agree", "❌ Disagree"],
+        q: "You prefer managers who involve you in discussions and value your emotions.",
+        options: ["😊 Yes, absolutely", "🙅‍♂️ I prefer structure"],
         type: "resonant"
       },
       {
-        q: "You work best under managers who expect immediate results.",
-        options: ["✅ Agree", "❌ Disagree"],
+        q: "Managers who push for immediate results and high standards stress you out.",
+        options: ["😓 Yes", "🚀 I thrive under pressure"],
         type: "dissonant"
       },
       {
-        q: "You appreciate when managers ask your input before decisions are made.",
-        options: ["👍 Yes", "👎 Not really"],
+        q: "You like a manager who coaches and guides rather than commands.",
+        options: ["💡 Coaching is great", "🗣️ I prefer direct orders"],
         type: "resonant"
       },
       {
-        q: "You find it tough when managers push high standards without explanation.",
-        options: ["😣 Yes", "💪 I don’t mind"],
+        q: "Do you find it difficult working under someone who sets the pace and expects you to catch up?",
+        options: ["😫 Yes, it’s overwhelming", "🏃‍♂️ I like the challenge"],
         type: "dissonant"
       },
       {
-        q: "You value managers who build emotional connections with the team.",
-        options: ["❤️ Love that", "😐 Not necessary"],
+        q: "You perform better with leaders who emphasize team spirit and collaboration.",
+        options: ["🤝 Definitely", "😶 I prefer solo tasks"],
         type: "resonant"
       },
       {
-        q: "Managers who give detailed direction are more effective than inspirational talks.",
-        options: ["✅ Agree", "❌ Disagree"],
+        q: "You’re okay with being told exactly what to do with little room for creativity.",
+        options: ["🧍‍♂️ Yes, that’s fine", "🎨 I need creative freedom"],
         type: "dissonant"
       }
     ];
@@ -208,7 +257,7 @@
         button.style.cursor = 'pointer';
         button.onclick = () => {
           addUserMessage(option);
-          const isAgree = option.includes("✅") || option.includes("👍") || option.includes("😣") || option.includes("❤️") || option.includes("💪");
+          const isAgree = option.includes("😊") || option.includes("😓") || option.includes("💡") || option.includes("😫") || option.includes("🤝") || option.includes("🧍‍♂️");
           scores[questions[index].type] += isAgree ? 1 : 0;
           index++;
           setTimeout(startQuiz, 800);
@@ -219,11 +268,10 @@
 
     function showResult() {
       if (scores.resonant >= scores.dissonant) {
-        addBotMessage("🔍 You may find it harder working with **dissonant managers** (Commanding or Pacesetting).\n\n✨ Try focusing on understanding their expectations and keeping communication open. If you will not open up with your ideas and initiatives they will not understand your concerns<3");
+        addBotMessage("🔍 You may find it harder working with **dissonant managers** (Commanding or Pacesetting).\n\n✨ Try focusing on setting clear boundaries, asking for context, and offering progress updates regularly.");
       } else {
-        addBotMessage("🔍 You may find **resonant managers** (like Coaching or Visionary) more challenging.\n\n💡 Try to adapt by understanding their long-term goals and emotional connection.They are trying to build an inclusive environment for you so that everyone feels heard<3");
+        addBotMessage("🔍 You may find **resonant managers** (like Coaching or Visionary) more challenging.\n\n💡 Try to adapt by showing openness to collaboration, long-term vision, and emotional intelligence in your communication.");
       }
     }
-  </script>
-</body>
+  </script></body>
 </html>
