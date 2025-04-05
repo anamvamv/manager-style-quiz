@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manager Compatibility Quiz</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: #333;
+    }
+    #cover-page {
+      padding: 50px;
+      background: linear-gradient(135deg, #e94057, #f27121);
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #start-btn {
+      background: #ffffff;
+      border: none;
+      padding: 15px 30px;
+      font-size: 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      color: #f27121;
+      font-weight: bold;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+    }
+    .hidden {
+      display: none;
+    }
+    #chat-container {
+      width: 90%;
+      max-width: 500px;
+      background: #fff8e1;
+      margin: 50px auto;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    #chat-header {
+      background: #ff9800;
+      color: white;
+      padding: 15px;
+    }
+    #chat-box {
+      height: 450px;
+      overflow-y: auto;
+      padding: 15px;
+      background: #fff3e0;
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-bubble {
+      max-width: 80%;
+      padding: 12px;
+      margin: 6px;
+      border-radius: 15px;
+      display: inline-block;
+      font-size: 16px;
+    }
+    .user-bubble {
+      background: #4db6ac;
+      color: white;
+      align-self: flex-end;
+    }
+    .bot-bubble {
+      background: #ffb74d;
+      color: black;
+      align-self: flex-start;
+    }
+    #user-input {
+      width: 70%;
+      padding: 12px;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+    #submit-name {
+      width: 30%;
+      border: none;
+      background: #ef6c00;
+      color: white;
+      cursor: pointer;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div id="cover-page">
+    <h1>Welcome to the Office Section A ke Homies</h1>
+    <p>☕ Is your coffee ready? If yes, sip and start! 🚀</p>
+    <button id="start-btn">Start</button>
+  </div>
+
+  <div id="chat-container" class="hidden">
+    <div id="chat-header">
+      <h2 id="chat-title">Your Trusted Coworker 🤖</h2>
+    </div>
+    <div id="chat-box"></div>
+    <div style="display: flex;">
+      <input type="text" id="user-input" placeholder="Type your name..." />
+      <button id="submit-name">➡️</button>
+    </div>
+  </div>
+
+  <script>
+    const startBtn = document.getElementById('start-btn');
+    const coverPage = document.getElementById('cover-page');
+    const chatContainer = document.getElementById('chat-container');
+    const chatBox = document.getElementById('chat-box');
+    const chatTitle = document.getElementById('chat-title');
+    const userInput = document.getElementById('user-input');
+    const submitName = document.getElementById('submit-name');
+
+    let index = 0;
+    let scores = { resonant: 0, dissonant: 0 };
+    let userName = '';
+
+    const questions = [
+      {
+        q: "You prefer managers who listen first, then decide.",
+        options: ["✅ Agree", "❌ Disagree"],
+        type: "resonant"
+      },
+      {
+        q: "You work best under managers who expect immediate results.",
+        options: ["✅ Agree", "❌ Disagree"],
+        type: "dissonant"
+      },
+      {
+        q: "You appreciate when managers ask your input before decisions are made.",
+        options: ["👍 Yes", "👎 Not really"],
+        type: "resonant"
+      },
+      {
+        q: "You find it tough when managers push high standards without explanation.",
+        options: ["😣 Yes", "💪 I don’t mind"],
+        type: "dissonant"
+      },
+      {
+        q: "You value managers who build emotional connections with the team.",
+        options: ["❤️ Love that", "😐 Not necessary"],
+        type: "resonant"
+      },
+      {
+        q: "Managers who give detailed direction are more effective than inspirational talks.",
+        options: ["✅ Agree", "❌ Disagree"],
+        type: "dissonant"
+      }
+    ];
+
+    startBtn.addEventListener('click', () => {
+      coverPage.classList.add('hidden');
+      chatContainer.classList.remove('hidden');
+    });
+
+    submitName.addEventListener('click', () => {
+      userName = userInput.value.trim();
+      if (userName) {
+        chatTitle.innerText = `${userName} ka trusted coworker 🧑‍💼`;
+        addBotMessage(`Hi ${userName}! Let's find out what type of manager challenges you the most. 🤔`);
+        userInput.style.display = "none";
+        submitName.style.display = "none";
+        setTimeout(startQuiz, 1000);
+      }
+    });
+
+    function addBotMessage(message) {
+      const div = document.createElement('div');
+      div.className = 'chat-bubble bot-bubble';
+      div.innerText = message;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function addUserMessage(message) {
+      const div = document.createElement('div');
+      div.className = 'chat-bubble user-bubble';
+      div.innerText = message;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function startQuiz() {
+      if (index < questions.length) {
+        addBotMessage(questions[index].q);
+        showOptions();
+      } else {
+        showResult();
+      }
+    }
+
+    function showOptions() {
+      questions[index].options.forEach(option => {
+        const button = document.createElement('button');
+        button.className = 'chat-bubble user-bubble';
+        button.innerText = option;
+        button.style.cursor = 'pointer';
+        button.onclick = () => {
+          addUserMessage(option);
+          const isAgree = option.includes("✅") || option.includes("👍") || option.includes("😣") || option.includes("❤️") || option.includes("💪");
+          scores[questions[index].type] += isAgree ? 1 : 0;
+          index++;
+          setTimeout(startQuiz, 800);
+        };
+        chatBox.appendChild(button);
+      });
+    }
+
+    function showResult() {
+      if (scores.resonant >= scores.dissonant) {
+        addBotMessage("🔍 You may find it harder working with **dissonant managers** (Commanding or Pacesetting).\n\n✨ Try focusing on understanding their expectations and keeping communication open. If you will not open up with your ideas and initiatives they will not understand your concerns<3");
+      } else {
+        addBotMessage("🔍 You may find **resonant managers** (like Coaching or Visionary) more challenging.\n\n💡 Try to adapt by understanding their long-term goals and emotional connection.They are trying to build an inclusive environment for you so that everyone feels heard<3");
+      }
+    }
+  </script>
+</body>
+</html>
