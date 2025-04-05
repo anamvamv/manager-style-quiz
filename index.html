@@ -22,6 +22,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      position: relative;
     }
     #start-btn {
       background: #ffffff;
@@ -94,25 +95,13 @@
       cursor: pointer;
       font-size: 18px;
     }
-    #chibi-container {
-      position: fixed;
+    #chibi {
+      position: absolute;
       bottom: 10px;
       right: 10px;
-      width: 120px;
+      width: 90px;
       cursor: pointer;
-      z-index: 1000;
-      animation: float 4s ease-in-out infinite;
-    }
-    #chibi-image {
-      width: 100%;
-    }
-    #chibi-bubble {
-      background: #fff;
-      padding: 10px;
-      border-radius: 15px;
-      box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
-      font-size: 14px;
-      margin-top: 5px;
+      animation: float 3s ease-in-out infinite;
     }
     @keyframes float {
       0%, 100% { transform: translateY(0); }
@@ -125,6 +114,7 @@
     <h1>Welcome to the Office Section A ke Homies</h1>
     <p>☕ Is your coffee ready? If yes, sip and start! 🚀</p>
     <button id="start-btn">Start</button>
+    <img id="chibi" src="https://i.ibb.co/sHY3Kbh/chibi-office-girl.png" alt="Chibi Office Girl" title="Click me!" />
   </div>  <div id="chat-container" class="hidden">
     <div id="chat-header">
       <h2 id="chat-title">Your Trusted Coworker 🤖</h2>
@@ -134,9 +124,6 @@
       <input type="text" id="user-input" placeholder="Type your name..." />
       <button id="submit-name">➡️</button>
     </div>
-  </div>  <div id="chibi-container">
-    <img id="chibi-image" src="https://i.ibb.co/LYNrG38/chibi-office-lady.png" alt="Chibi Lady" />
-    <div id="chibi-bubble">Hi there! Ready to discover your work style?</div>
   </div>  <script>
     const startBtn = document.getElementById('start-btn');
     const coverPage = document.getElementById('cover-page');
@@ -145,29 +132,24 @@
     const chatTitle = document.getElementById('chat-title');
     const userInput = document.getElementById('user-input');
     const submitName = document.getElementById('submit-name');
-
-    const chibiBubble = document.getElementById('chibi-bubble');
-    const chibiImage = document.getElementById('chibi-image');
-    const chibiSayings = [
-      "You're doing amazing!",
-      "High five! ✋",
-      "Stay focused, you got this!",
-      "Don't give up!",
-      "Wanna play rock-paper-scissors? ✊✋✌️"
-    ];
-
-    document.getElementById('chibi-container').addEventListener('click', () => {
-      const random = chibiSayings[Math.floor(Math.random() * chibiSayings.length)];
-      chibiBubble.innerText = random;
-      chibiImage.style.transform = 'scale(1.1) rotate(2deg)';
-      setTimeout(() => {
-        chibiImage.style.transform = 'scale(1) rotate(0)';
-      }, 500);
-    });
+    const chibi = document.getElementById('chibi');
 
     let index = 0;
     let scores = { resonant: 0, dissonant: 0 };
     let userName = '';
+
+    const gestures = [
+      "✋ High five! You're doing great!",
+      "怒 I'm mad at your stress, not you! Let’s push forward!",
+      "✌️ Let’s play rock-paper-scissors next time!",
+      "👋 Hiiiii~ You're awesome! Keep going!",
+      "🚀 You're blasting off into success!"
+    ];
+
+    chibi.addEventListener('click', () => {
+      const msg = gestures[Math.floor(Math.random() * gestures.length)];
+      addBotMessage(msg);
+    });
 
     const questions = [
       {
