@@ -109,9 +109,9 @@
       bottom: 10px;
       left: 10px;
       width: 80px;
-      z-index: 0;
+      z-index: 1;
       animation: float 3s ease-in-out infinite;
-      pointer-events: none;
+      cursor: pointer;
     }
     @keyframes float {
       0%, 100% { transform: translateY(0); }
@@ -160,10 +160,24 @@
     const chatTitle = document.getElementById('chat-title');
     const userInput = document.getElementById('user-input');
     const submitName = document.getElementById('submit-name');
+    const chibi = document.getElementById('chibi');
 
     let index = 0;
     let scores = { resonant: 0, dissonant: 0 };
     let userName = '';
+
+    const motivationalQuotes = [
+      "You're doing amazing, keep going! 💪",
+      "Remember why you started. Stay focused! 🌟",
+      "Work hard, dream big! 🚀",
+      "One step at a time. You've got this! 🧠",
+      "Productivity is power! ✨"
+    ];
+
+    chibi.addEventListener('click', () => {
+      const message = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+      addBotMessage(message);
+    });
 
     const questions = [
       {
@@ -218,7 +232,7 @@
     function addBotMessage(message) {
       const div = document.createElement('div');
       div.className = 'chat-bubble bot-bubble';
-      div.innerText = message;
+      div.innerHTML = message;
       chatBox.appendChild(div);
       chatBox.scrollTop = chatBox.scrollHeight;
     }
@@ -241,6 +255,9 @@
     }
 
     function showOptions() {
+      const oldButtons = chatBox.querySelectorAll('button');
+      oldButtons.forEach(btn => btn.remove());
+
       questions[index].options.forEach(option => {
         const button = document.createElement('button');
         button.className = 'chat-bubble user-bubble';
@@ -248,7 +265,10 @@
         button.style.cursor = 'pointer';
         button.onclick = () => {
           addUserMessage(option);
-          const isAgree = option.includes("😊") || option.includes("😓") || option.includes("💡") || option.includes("😫") || option.includes("🤝") || option.includes("🧍‍♂️");
+          const buttonsToRemove = chatBox.querySelectorAll('button');
+          buttonsToRemove.forEach(btn => btn.remove());
+
+          const isAgree = ["😊", "😓", "💡", "😫", "🤝", "🧍‍♂️"].some(emoji => option.includes(emoji));
           scores[questions[index].type] += isAgree ? 1 : 0;
           index++;
           setTimeout(startQuiz, 800);
@@ -258,11 +278,17 @@
     }
 
     function showResult() {
+      const resultMsg = document.createElement('div');
+      resultMsg.className = 'chat-bubble bot-bubble';
+
       if (scores.resonant >= scores.dissonant) {
-        addBotMessage("🔍 You may find it harder working with **dissonant managers** (Commanding or Pacesetting).\n\n✨ Try focusing on setting clear boundaries, asking for context, and offering progress updates regularly.");
+        resultMsg.innerHTML = "🎉 <strong>Result:</strong> You may find it harder working with <strong>dissonant managers</strong> (Commanding or Pacesetting).<br><br>✨ Try focusing on setting clear boundaries, asking for context, and offering progress updates regularly.";
       } else {
-        addBotMessage("🔍 You may find **resonant managers** (like Coaching or Visionary) more challenging.\n\n💡 Try to adapt by showing openness to collaboration, long-term vision, and emotional intelligence in your communication.");
+        resultMsg.innerHTML = "🎉 <strong>Result:</strong> You may find <strong>resonant managers</strong> (like Coaching or Visionary) more challenging.<br><br>💡 Try to adapt by showing openness to collaboration, long-term vision, and emotional intelligence in your communication.";
       }
+
+      chatBox.appendChild(resultMsg);
+      chatBox.scrollTop = chatBox.scrollHeight;
     }
   </script>
 </body>
