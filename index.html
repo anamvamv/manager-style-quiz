@@ -1,11 +1,12 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Manager Compatibility Quiz</title>
   <style>
     body {
-      font-family: 'Comic Sans MS', sans-serif;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
       background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
       margin: 0;
       padding: 0;
@@ -22,7 +23,6 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      position: relative;
     }
     #start-btn {
       background: #ffffff;
@@ -96,16 +96,15 @@
       font-size: 18px;
     }
     #chibi {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      width: 90px;
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 120px;
       cursor: pointer;
-      animation: float 3s ease-in-out infinite;
+      transition: transform 0.3s ease;
     }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+    #chibi:hover {
+      transform: scale(1.1) rotate(5deg);
     }
   </style>
 </head>
@@ -114,8 +113,9 @@
     <h1>Welcome to the Office Section A ke Homies</h1>
     <p>☕ Is your coffee ready? If yes, sip and start! 🚀</p>
     <button id="start-btn">Start</button>
-    <img id="chibi" src="https://i.ibb.co/sHY3Kbh/chibi-office-girl.png" alt="Chibi Office Girl" title="Click me!" />
-  </div>  <div id="chat-container" class="hidden">
+  </div>
+
+  <div id="chat-container" class="hidden">
     <div id="chat-header">
       <h2 id="chat-title">Your Trusted Coworker 🤖</h2>
     </div>
@@ -124,7 +124,11 @@
       <input type="text" id="user-input" placeholder="Type your name..." />
       <button id="submit-name">➡️</button>
     </div>
-  </div>  <script>
+  </div>
+
+  <img id="chibi" src="chibi-office-lady.png" alt="Chibi Office Lady" title="Click me!" />
+
+  <script>
     const startBtn = document.getElementById('start-btn');
     const coverPage = document.getElementById('cover-page');
     const chatContainer = document.getElementById('chat-container');
@@ -137,19 +141,6 @@
     let index = 0;
     let scores = { resonant: 0, dissonant: 0 };
     let userName = '';
-
-    const gestures = [
-      "✋ High five! You're doing great!",
-      "怒 I'm mad at your stress, not you! Let’s push forward!",
-      "✌️ Let’s play rock-paper-scissors next time!",
-      "👋 Hiiiii~ You're awesome! Keep going!",
-      "🚀 You're blasting off into success!"
-    ];
-
-    chibi.addEventListener('click', () => {
-      const msg = gestures[Math.floor(Math.random() * gestures.length)];
-      addBotMessage(msg);
-    });
 
     const questions = [
       {
@@ -249,5 +240,18 @@
         addBotMessage("🔍 You may find **resonant managers** (like Coaching or Visionary) more challenging.\n\n💡 Try to adapt by showing openness to collaboration, long-term vision, and emotional intelligence in your communication.");
       }
     }
-  </script></body>
+
+    chibi.addEventListener('click', () => {
+      const reactions = [
+        "💪 Keep going, you're doing great!",
+        "🙌 High five!",
+        "😡 You better finish this quiz! (just kidding 😄)",
+        "🪨📄✂️ Wanna play rock-paper-scissors?",
+        "👋 Hello friend! You got this! 💼"
+      ];
+      const random = reactions[Math.floor(Math.random() * reactions.length)];
+      addBotMessage(random);
+    });
+  </script>
+</body>
 </html>
